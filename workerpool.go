@@ -53,12 +53,45 @@ func (wp *workerpool[I, O]) getStatus() workerpoolStatus {
 	return status
 }
 
+func (wp *workerpool[I, O]) executeTask(ctx *context.Context) {
+	defer wp.doneWithInput.Done()
+	for {
+		select {
+		case input, more := <-wp.inputChannel:
+			if !more {
+				return
+			}
+			output, err := wp.do(input)
+			if err != nil {
+				wp.errChannel <- err
+				continue
+			}
+			wp.outputChannel <- output
+		case <-(*ctx).Done():
+			return
+		}
+	}
+}
+
 func (wp *workerpool[I, O]) start(ctx context.Context) {
-	// to do
+	wp.mu.Lock()
+	wp.status = wpStarted
+	wp.mu.Unlock()
+
+	for i := 0; i < wp.size; i++ {
+		go wp.executeTask(&ctx)
+	}
 }
 
 func (wp *workerpool[I, O]) stop(ctx context.Context) {
-	// to do
+	wp.mu.Lock()
+	wp.status = wpStopped
+	wp.mu.Unlock()
+
+	close(wp.inputChannel)
+	wp.doneWithInput.Wait()
+	close(wp.outputChannel)
+	close(wp.errChannel)
 }
 
 func (wp *workerpool[I, O]) process(input I) {
