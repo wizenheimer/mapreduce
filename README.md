@@ -1,8 +1,9 @@
 # MapReduce Implementation
 
 ## Overview
+![Alt text](media/image.png)
 
-This repository contains an implementation of the MapReduce programming model, inspired by the seminal paper "MapReduce: Simplified Data Processing on Large Clusters" by Jeffrey Dean and Sanjay Ghemawat. MapReduce is a programming model and associated implementation for processing and generating large datasets that can be parallelized across distributed clusters of computers. The primary goal of MapReduce is to make it easy for developers to write scalable and fault-tolerant data processing applications.
+This repository contains a concurrent implementation of the map-reduce paradigm as a function in Go. This is inspired by the seminal paper "MapReduce: Simplified Data Processing on Large Clusters" by Jeffrey Dean and Sanjay Ghemawat. MapReduce is a programming model and associated implementation for processing and generating large datasets that can be parallelized across distributed clusters of computers. The primary goal of MapReduce is to make it easy for developers to write scalable and fault-tolerant data processing applications.
 
 ## Background
 
